@@ -1,6 +1,10 @@
-# 🚀 Welcome to your new awesome project!
+# 🚀 原生 js 控制 bezier 曲线
 
-This project has been created using **webpack scaffold**, you can now run
+### 实现贝塞尔曲线的基本控制
+
+#### 1.canvas 内部元素与鼠标事件绑定
+
+#### 2.动态修改控制点与 bezier
 
 ```
 npm run build
