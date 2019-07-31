@@ -48,7 +48,7 @@ module.exports = {
   entry: './index.ts',
 
   output: {
-    filename: '[name].[chunkhash].js',
+    filename: './[name].[chunkhash].js',
     path: path.resolve(__dirname, 'dist')
   },
 

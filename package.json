@@ -3,7 +3,10 @@
   "description": "My webpack project",
   "scripts": {
     "build": "webpack",
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server",
+    "pages": "npm run pages:clear && gh-pages -d dist -b gh-pages",
+    "pages:clear": "gh-pages-clean",
+    "deploy": "npm run build && npm run pages"
   },
   "devDependencies": {
     "autoprefixer": "^9.6.1",
@@ -17,6 +20,7 @@
     "typescript": "^3.5.3",
     "webpack": "^4.37.0",
     "webpack-cli": "^3.3.6",
-    "webpack-dev-server": "^3.7.2"
+    "webpack-dev-server": "^3.7.2",
+    "gh-pages": "^2.0.1"
   }
 }
