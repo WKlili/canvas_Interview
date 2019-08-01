@@ -9,8 +9,9 @@ interface circleConfig {
   c2y: number;
 }
 
-export default class circle {
+export default class bezier {
   ctx: any;
+  type: string = 'bezier';
   startx: number;
   starty: number;
 
@@ -36,6 +37,8 @@ export default class circle {
     this.c1y = c1y;
     this.c2x = c2x;
     this.c2y = c2y;
+
+    this.painting();
   }
 
   painting() {

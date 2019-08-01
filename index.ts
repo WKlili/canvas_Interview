@@ -1,8 +1,22 @@
 import circle from './shape/circle';
 import bezier from './shape/bezier';
+import label from './shape/label';
 
 const canvas: any = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
+//渐变背景
+drawBk();
+function drawBk() {
+  ctx.beginPath();
+  var linear = ctx.createLinearGradient(0, 0, 512, 0);
+  linear.addColorStop(0, '#000000');
+  linear.addColorStop(1, '#ffffff');
+  ctx.fillStyle = linear;
+  ctx.fillRect(0, 0, 512, 512);
+  ctx.fillStyle = '#000000';
+  ctx.closePath();
+}
+
 const canvasInfo = canvas.getBoundingClientRect();
 let renderList: object[] = [];
 
@@ -32,6 +46,15 @@ const addEvent = () => {
       itemToLast(choosedIndex);
     }
 
+    const target: any = renderList[renderList.length - 1];
+    if (target.type === 'label') {
+      let word = prompt('请输入注释内容', '');
+      if (word) {
+        target.editLable(word);
+      }
+    }
+
+    document.addEventListener('dblclick', mouseDblclick);
     document.addEventListener('mousemove', mousemoveEvent);
     document.addEventListener('mouseup', mouseupEvent);
     painting();
@@ -41,6 +64,17 @@ const addEvent = () => {
     const lastItem = renderList.splice(index, 1)[0];
 
     renderList.push(lastItem);
+  }
+
+  function mouseDblclick() {
+    const target: any = renderList[renderList.length - 1];
+    if (target.type !== 'bezier') {
+      let word = prompt('请输入注释内容', '');
+      if (word) {
+        target.label.label = word;
+      }
+    }
+    painting();
   }
 
   function mousemoveEvent(e: any) {
@@ -82,28 +116,58 @@ const addEvent = () => {
 
 addEvent();
 
+let point1 = [20, 20];
+
+let label1 = new label(ctx, {
+  center: point1,
+  label: 'start'
+});
+
 let circle1 = new circle(ctx, {
-  center: [20, 20],
-  radius: 5,
-  type: 'start'
+  center: point1,
+  radius: 6,
+  type: 'start',
+  label: label1
+});
+
+let point2 = [300, 300];
+
+let label2 = new label(ctx, {
+  center: point2,
+  label: 'end'
 });
 
 let circle2 = new circle(ctx, {
-  center: [300, 300],
-  radius: 5,
-  type: 'end'
+  center: point2,
+  radius: 6,
+  type: 'end',
+  label: label2
+});
+
+let c1point = [20, 100];
+
+let label3 = new label(ctx, {
+  center: c1point
 });
 
 let c1 = new circle(ctx, {
-  center: [20, 100],
-  radius: 5,
-  type: 'c1'
+  center: c1point,
+  radius: 6,
+  type: 'c1',
+  label: label3
+});
+
+let c2point = [300, 200];
+
+let label4 = new label(ctx, {
+  center: c2point
 });
 
 let c2 = new circle(ctx, {
-  center: [300, 200],
-  radius: 5,
-  type: 'c2'
+  center: c2point,
+  radius: 6,
+  type: 'c2',
+  label: label4
 });
 
 let bezierLine = new bezier(ctx, {
@@ -117,16 +181,21 @@ let bezierLine = new bezier(ctx, {
   c2y: 200
 });
 
-circle1.painting();
-circle2.painting();
-c1.painting();
-c2.painting();
-bezierLine.painting();
-
-Array.prototype.push.apply(renderList, [circle1, circle2, c1, c2, bezierLine]);
+Array.prototype.push.apply(renderList, [
+  label1,
+  label2,
+  label3,
+  label4,
+  circle1,
+  circle2,
+  c1,
+  c2,
+  bezierLine
+]);
 
 const painting = () => {
   ctx.clearRect(0, 0, canvasInfo.width, canvasInfo.height);
+  drawBk();
   renderList.forEach((it: any) => it.painting());
 };
 

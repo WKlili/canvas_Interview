@@ -2,6 +2,7 @@ interface circleConfig {
   center: number[];
   radius: number;
   type: string;
+  label?: any;
 }
 
 export default class circle {
@@ -10,9 +11,10 @@ export default class circle {
   radius: number;
   type: string;
   drag: boolean = true;
+  label: any;
 
   constructor(ctx: any, config: circleConfig) {
-    const { center, radius, type } = config;
+    const { center, radius, type, label } = config;
     this.ctx = ctx;
     this.center = [
       center[0] === undefined ? radius : center[0],
@@ -20,9 +22,18 @@ export default class circle {
     ];
     this.radius = radius;
     this.type = type;
+    if (label) {
+      this.label = label;
+      this.label.painting();
+    }
+
+    this.painting();
   }
 
   painting() {
+    if (this.label) {
+      this.label.adjust(this.center[0], this.center[1]);
+    }
     this.ctx.beginPath();
     this.ctx.arc(
       this.center[0],
