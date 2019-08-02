@@ -22,7 +22,7 @@
 
 #### 待完善：canvas 事件自动绑定，滤镜圆有锯齿，圆点周围是否需要添加操作事件，canvas 的鼠标事件位置暂未计算。
 
-demo 访问地址：
+demo 访问地址：https://wklili.github.io/canvas_Interview/
 
 ```
 npm run build
