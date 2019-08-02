@@ -2,6 +2,7 @@ interface circleConfig {
   center: number[];
   radius: number;
   type: string;
+  ratio?: number;
   label?: any;
 }
 
@@ -12,10 +13,12 @@ export default class circle {
   type: string;
   drag: boolean = true;
   label: any;
+  ratio: number = 1;
 
   constructor(ctx: any, config: circleConfig) {
-    const { center, radius, type, label } = config;
+    const { center, radius, type, label, ratio } = config;
     this.ctx = ctx;
+
     this.center = [
       center[0] === undefined ? radius : center[0],
       center[1] === undefined ? radius : center[1]
@@ -26,7 +29,7 @@ export default class circle {
       this.label = label;
       this.label.painting();
     }
-
+    this.ratio = ratio;
     this.painting();
   }
 
@@ -36,7 +39,6 @@ export default class circle {
     }
     this.drawPointBack();
     this.ctx.beginPath();
-    this.ctx.fillStyle = '#000000';
     this.ctx.arc(
       this.center[0],
       this.center[1],
@@ -52,16 +54,24 @@ export default class circle {
   }
 
   drawPointBack() {
-    const { ctx, center } = this;
+    const { ctx, center, ratio } = this;
     ctx.beginPath();
     // 开始滤镜处理
-    var imgData = ctx.getImageData(center[0] - 15, center[1] - 15, 30, 30);
+    var imgData = ctx.getImageData(
+      (center[0] - 15) * ratio,
+      (center[1] - 15) * ratio,
+      30 * ratio,
+      30 * ratio
+    );
 
-    for (let x = -imgData.width / 2; x < imgData.width / 2; x++) {
-      for (let y = -imgData.height / 2; y < imgData.height / 2; y++) {
-        if (Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) <= 15) {
-          var idx = (x + 15 + (y + 15) * imgData.width) * 4;
+    const circleWidth = imgData.width,
+      circleHeight = imgData.height,
+      radius = 15 * ratio;
 
+    for (let x = -circleWidth / 2; x < circleWidth / 2; x++) {
+      for (let y = -circleHeight / 2; y < circleHeight / 2; y++) {
+        if (Math.pow(x, 2) + Math.pow(y, 2) <= Math.pow(radius, 2)) {
+          var idx = (x + radius + (y + radius) * circleWidth) * 4;
           var r = imgData.data[idx + 0];
           var g = imgData.data[idx + 1];
           var b = imgData.data[idx + 2];
@@ -75,7 +85,12 @@ export default class circle {
       }
     }
 
-    ctx.putImageData(imgData, center[0] - 15, center[1] - 15); // 重写图像数据
+    ctx.putImageData(
+      imgData,
+      (center[0] - 15) * ratio,
+      (center[1] - 15) * ratio
+    ); // 重写图像数据
+
     ctx.closePath();
   }
 

@@ -1,3 +1,4 @@
+import scaleCanvas from './shape/scaleCanvas';
 import circle from './shape/circle';
 import bezier from './shape/bezier';
 import label from './shape/label';
@@ -5,30 +6,18 @@ import label from './shape/label';
 const canvas: any = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 //渐变背景
+const ratio = scaleCanvas(ctx, canvas);
+
 drawBk();
 function drawBk() {
   ctx.beginPath();
   var linear = ctx.createLinearGradient(0, 0, 512, 0);
-  linear.addColorStop(0, '#000000');
-  linear.addColorStop(1, '#ffffff');
+  linear.addColorStop(0, '#ffffff');
+  linear.addColorStop(1, '#000000');
   ctx.fillStyle = linear;
-  ctx.fillRect(0, 0, 512, 512);
+  ctx.fillRect(0, 0, 512 * ratio, 512 * ratio);
   ctx.fillStyle = '#000000';
   ctx.closePath();
-
-  // 开始滤镜处理
-  var imgData = ctx.getImageData(0, 0, 512, 512);
-  for (var i = 0; i < imgData.data.length / 4; ++i) {
-    var red = imgData.data[i * 4],
-      green = imgData.data[i * 4 + 1],
-      blue = imgData.data[i * 4 + 2];
-    // 刷新RGB，注意：
-    // imgData.data[i * 4 + 3]存放的是alpha，不需要改动
-    imgData.data[i * 4] = 255 - red;
-    imgData.data[i * 4 + 1] = 255 - green;
-    imgData.data[i * 4 + 2] = 255 - blue;
-  }
-  ctx.putImageData(imgData, 0, 0); // 重写图像数据
 }
 
 const canvasInfo = canvas.getBoundingClientRect();
@@ -40,8 +29,8 @@ const addEvent = () => {
     choosedIndex: number = -1;
 
   canvas.addEventListener('mousedown', (e: any) => {
-    startX = e.clientX;
-    startY = e.clientY;
+    startX = e.clientX * ratio;
+    startY = e.clientY * ratio;
 
     const ifhave = renderList.map((it: any, index: number) => {
       it.painting();
@@ -141,7 +130,8 @@ let circle1 = new circle(ctx, {
   center: point1,
   radius: 5,
   type: 'start',
-  label: label1
+  label: label1,
+  ratio
 });
 
 let point2 = [300, 300];
@@ -155,7 +145,8 @@ let circle2 = new circle(ctx, {
   center: point2,
   radius: 5,
   type: 'end',
-  label: label2
+  label: label2,
+  ratio
 });
 
 let c1point = [100, 300];
@@ -168,7 +159,8 @@ let c1 = new circle(ctx, {
   center: c1point,
   radius: 5,
   type: 'c1',
-  label: label3
+  label: label3,
+  ratio
 });
 
 let c2point = [300, 100];
@@ -181,7 +173,8 @@ let c2 = new circle(ctx, {
   center: c2point,
   radius: 5,
   type: 'c2',
-  label: label4
+  label: label4,
+  ratio
 });
 
 let bezierLine = new bezier(ctx, {
