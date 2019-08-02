@@ -1,5 +1,7 @@
 # 🚀 原生 js 控制 bezier 曲线
 
+demo 访问地址：https://wklili.github.io/canvas_Interview/
+
 ### 实现贝塞尔曲线的基本控制
 
 #### 1.canvas 内部元素与鼠标事件绑定
@@ -21,8 +23,6 @@
 #### 2.采用滤镜做周围样式颜色变化(采用计算圆的方式去用滤镜在周围生成样式)
 
 #### 待完善：canvas 事件自动绑定，滤镜圆有锯齿，圆点周围是否需要添加操作事件，canvas 的鼠标事件位置暂未计算。
-
-demo 访问地址：https://wklili.github.io/canvas_Interview/
 
 ```
 npm run build
