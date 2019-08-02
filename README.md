@@ -28,7 +28,7 @@ demo 访问地址：https://wklili.github.io/canvas_Interview/
 
 #### 2.绘制图形的接口需要加上ratio
 
-#### 待完善：canvas 事件自动绑定，圆点周围是否需要添加操作事件，canvas 的鼠标事件位置暂未计算。
+#### 待完善：canvas 事件自动绑定类（现在是每添加一个元素则手动添加到观察数组中）
 
 ```
 npm run build
