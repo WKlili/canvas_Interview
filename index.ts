@@ -15,6 +15,20 @@ function drawBk() {
   ctx.fillRect(0, 0, 512, 512);
   ctx.fillStyle = '#000000';
   ctx.closePath();
+
+  // 开始滤镜处理
+  var imgData = ctx.getImageData(0, 0, 512, 512);
+  for (var i = 0; i < imgData.data.length / 4; ++i) {
+    var red = imgData.data[i * 4],
+      green = imgData.data[i * 4 + 1],
+      blue = imgData.data[i * 4 + 2];
+    // 刷新RGB，注意：
+    // imgData.data[i * 4 + 3]存放的是alpha，不需要改动
+    imgData.data[i * 4] = 255 - red;
+    imgData.data[i * 4 + 1] = 255 - green;
+    imgData.data[i * 4 + 2] = 255 - blue;
+  }
+  ctx.putImageData(imgData, 0, 0); // 重写图像数据
 }
 
 const canvasInfo = canvas.getBoundingClientRect();
@@ -116,7 +130,7 @@ const addEvent = () => {
 
 addEvent();
 
-let point1 = [20, 20];
+let point1 = [100, 100];
 
 let label1 = new label(ctx, {
   center: point1,
@@ -125,7 +139,7 @@ let label1 = new label(ctx, {
 
 let circle1 = new circle(ctx, {
   center: point1,
-  radius: 6,
+  radius: 5,
   type: 'start',
   label: label1
 });
@@ -139,12 +153,12 @@ let label2 = new label(ctx, {
 
 let circle2 = new circle(ctx, {
   center: point2,
-  radius: 6,
+  radius: 5,
   type: 'end',
   label: label2
 });
 
-let c1point = [20, 100];
+let c1point = [100, 300];
 
 let label3 = new label(ctx, {
   center: c1point
@@ -152,12 +166,12 @@ let label3 = new label(ctx, {
 
 let c1 = new circle(ctx, {
   center: c1point,
-  radius: 6,
+  radius: 5,
   type: 'c1',
   label: label3
 });
 
-let c2point = [300, 200];
+let c2point = [300, 100];
 
 let label4 = new label(ctx, {
   center: c2point
@@ -165,20 +179,20 @@ let label4 = new label(ctx, {
 
 let c2 = new circle(ctx, {
   center: c2point,
-  radius: 6,
+  radius: 5,
   type: 'c2',
   label: label4
 });
 
 let bezierLine = new bezier(ctx, {
-  startx: 20,
-  starty: 20,
-  endx: 300,
-  endy: 300,
-  c1x: 20,
-  c1y: 100,
-  c2x: 300,
-  c2y: 200
+  startx: point1[0],
+  starty: point1[1],
+  endx: point2[0],
+  endy: point2[1],
+  c1x: c1point[0],
+  c1y: c1point[1],
+  c2x: c2point[0],
+  c2y: c2point[1]
 });
 
 Array.prototype.push.apply(renderList, [
@@ -196,7 +210,9 @@ Array.prototype.push.apply(renderList, [
 const painting = () => {
   ctx.clearRect(0, 0, canvasInfo.width, canvasInfo.height);
   drawBk();
-  renderList.forEach((it: any) => it.painting());
+  renderList.forEach((it: any) => {
+    it.painting();
+  });
 };
 
 canvas.addEventListener('click', function(e: any) {});
